@@ -9,9 +9,6 @@ scrapy-ninja-proxies
    :target: http://travis-ci.org/TeamHG-Memex/scrapy-rotating-proxies
    :alt: Build Status
 
-.. image:: http://codecov.io/github/TeamHG-Memex/scrapy-rotating-proxies/coverage.svg?branch=master
-   :target: http://codecov.io/github/TeamHG-Memex/scrapy-rotating-proxies?branch=master
-   :alt: Code Coverage
 
 This package provides a Scrapy_ middleware to use rotating proxies, automatically provided though scrapy.ninja srvices.
 
