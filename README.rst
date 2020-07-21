@@ -26,7 +26,11 @@ Installation
 Usage
 -----
 
-Add ``ROTATING_NINJA_KEY`` option (something like 'KJHGFSERTYUIO87654323ERFGHUIO876543'), obtained from your **scrapy.ninja subscription**.
+Add ``ROTATING_NINJA_KEY`` option (something like 'KJHGFSERTYUIO87654323ERFGHUIO876543'), obtained from your **scrapy.ninja subscription**, to your settings.py
+
+    ROTATING_NINJA_KEY = KJHGFSERTYUIO87654323ERFGHUIO876543'
+
+
 
 Then add rotating_proxies middlewares to your DOWNLOADER_MIDDLEWARES::
 
