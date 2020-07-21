@@ -1,4 +1,4 @@
-scrapy-rotating-proxies
+scrapy-ninja-proxies
 =======================
 
 .. image:: https://img.shields.io/pypi/v/scrapy-rotating-proxies.svg
@@ -29,7 +29,7 @@ Installation
 Usage
 -----
 
-Add ``ROTATING_SCRAPY_KEY`` option (something like 'KJHGFSERTYUIO87654323ERFGHUIO876543'), obtained from your scrapy.ninja subscription.
+Add ``ROTATING_NINJA_KEY`` option (something like 'KJHGFSERTYUIO87654323ERFGHUIO876543'), obtained from your scrapy.ninja subscription.
 
 Then add rotating_proxies middlewares to your DOWNLOADER_MIDDLEWARES::
 
@@ -45,7 +45,7 @@ After this all requests will be proxied using one of the proxies obtained though
 Being scrapy.ninja subscribers, your active/working proxies list is automatically updated each 15 minutes.
 
 Requests with "proxy" set in their meta are not handled by
-scrapy-rotating-proxies. To disable proxying for a request set
+scrapy-ninja-proxies. To disable proxying for a request set
 ``request.meta['proxy'] = None``; to set proxy explicitly use
 ``request.meta['proxy'] = "<my-proxy-address>"``.
 
@@ -63,11 +63,11 @@ regardless of request url domain.
 Customization
 -------------
 
-``scrapy-rotating-proxies`` keeps track of working and non-working proxies,
+``scrapy-ninja-proxies`` keeps track of working and non-working proxies,
 and re-checks non-working from time to time.
 
 Detection of a non-working proxy is site-specific.
-By default, ``scrapy-rotating-proxies`` uses a simple heuristic:
+By default, ``scrapy-ninja-proxies`` uses a simple heuristic:
 if a response status code is not 200, response body is empty or if
 there was an exception then proxy is considered dead.
 
