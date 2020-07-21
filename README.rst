@@ -123,8 +123,6 @@ exponential backoff is capped by ``ROTATING_PROXY_BACKOFF_CAP``.
 Settings
 --------
 
-* ``ROTATING_PROXY_LIST``  - a list of proxies to choose from;
-* ``ROTATING_PROXY_LIST_PATH``  - path to a file with a list of proxies;
 * ``ROTATING_PROXY_LOGSTATS_INTERVAL`` - stats logging interval in seconds,
   30 by default;
 * ``ROTATING_PROXY_CLOSE_SPIDER`` - When True, spider is stopped if
@@ -146,17 +144,6 @@ Settings
 * ``ROTATING_PROXY_BAN_POLICY`` - path to a ban detection policy.
   Default is ``'rotating_proxies.policy.BanDetectionPolicy'``.
 
-
-FAQ
----
-
-Q: Where to get proxy lists? How to write and maintain ban rules?
-
-A: It is up to you to find proxies and maintain proper ban rules
-for web sites; ``scrapy-rotating-proxies`` doesn't have anything built-in.
-There are commercial proxy services like https://crawlera.com/ which can
-integrate with Scrapy (see https://github.com/scrapy-plugins/scrapy-crawlera)
-and take care of all these details.
 
 Contributing
 ------------
