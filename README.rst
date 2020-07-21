@@ -13,8 +13,7 @@ scrapy-rotating-proxies
    :target: http://codecov.io/github/TeamHG-Memex/scrapy-rotating-proxies?branch=master
    :alt: Code Coverage
 
-This package provides a Scrapy_ middleware to use rotating proxies,
-check that they are alive and adjust crawling speed.
+This package provides a Scrapy_ middleware to use rotating proxies, automatically provided though scrapy.ninja srvices.
 
 .. _Scrapy: https://scrapy.org/
 
@@ -25,26 +24,12 @@ Installation
 
 ::
 
-    pip install scrapy-rotating-proxies
+    pip3 install git+https://github.com/fliot/scrapy-ninja-proxies.git
 
 Usage
 -----
 
-Add ``ROTATING_PROXY_LIST`` option with a list of proxies to settings.py::
-
-    ROTATING_PROXY_LIST = [
-        'proxy1.com:8000',
-        'proxy2.com:8031',
-        # ...
-    ]
-
-As an alternative, you can specify a ``ROTATING_PROXY_LIST_PATH`` options
-with a path to a file with proxies, one per line::
-
-   ROTATING_PROXY_LIST_PATH = '/my/path/proxies.txt'
-
-``ROTATING_PROXY_LIST_PATH`` takes precedence over ``ROTATING_PROXY_LIST``
-if both options are present.
+Add ``ROTATING_SCRAPY_KEY`` option (something like 'KJHGFSERTYUIO87654323ERFGHUIO876543'), obtained from your scrapy.ninja subscription.
 
 Then add rotating_proxies middlewares to your DOWNLOADER_MIDDLEWARES::
 
@@ -55,8 +40,9 @@ Then add rotating_proxies middlewares to your DOWNLOADER_MIDDLEWARES::
         # ...
     }
 
-After this all requests will be proxied using one of the proxies from
-the ``ROTATING_PROXY_LIST`` / ``ROTATING_PROXY_LIST_PATH``.
+After this all requests will be proxied using one of the proxies obtained though your proxy services scrapy.ninja subscription.
+
+Being scrapy.ninja subscribers, your active/working proxies list is automatically updated each 15 minutes.
 
 Requests with "proxy" set in their meta are not handled by
 scrapy-rotating-proxies. To disable proxying for a request set
