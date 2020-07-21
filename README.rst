@@ -10,7 +10,7 @@ scrapy-ninja-proxies
    :alt: Build Status
 
 
-This package provides a Scrapy_ middleware to use rotating proxies, automatically provided though scrapy.ninja srvices.
+This package provides a Scrapy_ middleware to use rotating proxies, automatically provided within scrapy.ninja services subscription.
 
 .. _Scrapy: https://scrapy.org/
 
@@ -39,7 +39,7 @@ Then add rotating_proxies middlewares to your DOWNLOADER_MIDDLEWARES::
 
 After this all requests will be proxied using one of the proxies obtained though your proxy services scrapy.ninja subscription.
 
-**Being scrapy.ninja subscribers, your active/working proxies list is automatically updated each 15 minutes.**
+**Being scrapy.ninja subscribers, your active/working proxy list is automatically updated each 15 minutes.**
 
 Requests with "proxy" set in their meta are not handled by
 scrapy-ninja-proxies. To disable proxying for a request set
