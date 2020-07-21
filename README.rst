@@ -26,9 +26,9 @@ Installation
 Usage
 -----
 
-Add ``ROTATING_NINJA_KEY`` option (something like 'KJHGFSERTYUIO87654323ERFGHUIO876543'), obtained from your **scrapy.ninja subscription**, to your settings.py
+Add ``ROTATING_NINJA_KEY`` option (something like 'KJHGFSERTYUIO87654323ERFGHUIO876543'), obtained from your **scrapy.ninja subscription**, to your settings.py::
 
-    ROTATING_NINJA_KEY = KJHGFSERTYUIO87654323ERFGHUIO876543'
+    ROTATING_NINJA_KEY = 'KJHGFSERTYUIO87654323ERFGHUIO876543'
 
 
 
