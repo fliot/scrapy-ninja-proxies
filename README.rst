@@ -26,7 +26,7 @@ Installation
 Usage
 -----
 
-Add ``ROTATING_NINJA_KEY`` option (something like 'KJHGFSERTYUIO87654323ERFGHUIO876543'), obtained from your scrapy.ninja subscription.
+Add ``ROTATING_NINJA_KEY`` option (something like 'KJHGFSERTYUIO87654323ERFGHUIO876543'), obtained from your **scrapy.ninja subscription**.
 
 Then add rotating_proxies middlewares to your DOWNLOADER_MIDDLEWARES::
 
@@ -39,7 +39,7 @@ Then add rotating_proxies middlewares to your DOWNLOADER_MIDDLEWARES::
 
 After this all requests will be proxied using one of the proxies obtained though your proxy services scrapy.ninja subscription.
 
-Being scrapy.ninja subscribers, your active/working proxies list is automatically updated each 15 minutes.
+**Being scrapy.ninja subscribers, your active/working proxies list is automatically updated each 15 minutes.**
 
 Requests with "proxy" set in their meta are not handled by
 scrapy-ninja-proxies. To disable proxying for a request set
