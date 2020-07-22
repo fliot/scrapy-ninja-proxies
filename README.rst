@@ -124,6 +124,8 @@ exponential backoff is capped by ``ROTATING_PROXY_BACKOFF_CAP``.
 Settings
 --------
 
+* ``ROTATING_NINJA_RENEW_INTERVAL`` - renewing proxy list interval in seconds,
+  1200 by default;
 * ``ROTATING_PROXY_LOGSTATS_INTERVAL`` - stats logging interval in seconds,
   30 by default;
 * ``ROTATING_PROXY_CLOSE_SPIDER`` - When True, spider is stopped if

@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+0.6.2 (2020-07-22)
+------------------
+
+* **scrapy.ninja** proxy services, introducing ``ROTATING_NINJA_KEY`` and
+  ``ROTATING_NINJA_RENEW_INTERVAL``.
+
 0.6.2 (2019-05-25)
 ------------------
 

@@ -4,8 +4,13 @@ import time
 import random
 import logging
 import math
+import requests
 
 import attr
+from scrapy.utils.url import add_http_if_no_scheme
+
+import logging
+logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
 
 from .utils import extract_proxy_hostport
 
@@ -32,7 +37,20 @@ class Proxies(object):
     'reanimated'). This timeout increases exponentially after each
     unsuccessful attempt to use a proxy.
     """
-    def __init__(self, proxy_list, backoff=None):
+    def __init__(self, ninja_key, backoff=None):
+        self.load_ninja(ninja_key, backoff=backoff)
+
+    def load_ninja(self, ninja_key, backoff=None):
+        r = requests.get(url='https://scrapy.ninja/get_proxy.php?lic=%s' % ninja_key)
+        proxy_list = r.json()['proxies']
+
+        lines = [line.strip() for line in proxy_list]
+        proxy_list = list({
+            add_http_if_no_scheme(url)
+            for url in lines
+            if url and not url.startswith('#')
+        })
+
         self.proxies = {url: ProxyState() for url in proxy_list}
         self.proxies_by_hostport = {
             extract_proxy_hostport(proxy): proxy

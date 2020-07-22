@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import logging
-import codecs
 from functools import partial
 from six.moves.urllib.parse import urlsplit
 
@@ -46,8 +45,9 @@ class RotatingProxyMiddleware(object):
 
     Settings:
 
-    * ``ROTATING_PROXY_LIST``  - a list of proxies to choose from;
-    * ``ROTATING_PROXY_LIST_PATH``  - path to a file with a list of proxies;
+    * ``ROTATING_NINJA_KEY`` - scrapy.ninja subscription key;
+    * ``ROTATING_NINJA_RENEW_INTERVAL`` - renew proxy list in seconds, 
+      1200 by default (20 minutes);
     * ``ROTATING_PROXY_LOGSTATS_INTERVAL`` - stats logging interval in seconds,
       30 by default;
     * ``ROTATING_PROXY_CLOSE_SPIDER`` - When True, spider is stopped if
@@ -63,16 +63,18 @@ class RotatingProxyMiddleware(object):
     * ``ROTATING_PROXY_BACKOFF_CAP`` - backoff time cap, in seconds.
       Default is 3600 (i.e. 60 min).
     """
-    def __init__(self, proxy_list, logstats_interval, stop_if_no_proxies,
+    def __init__(self, ninja_key, logstats_interval, renew_interval, stop_if_no_proxies,
                  max_proxies_to_try, backoff_base, backoff_cap, crawler):
 
         backoff = partial(exp_backoff_full_jitter, base=backoff_base, cap=backoff_cap)
-        self.proxies = Proxies(self.cleanup_proxy_list(proxy_list),
+        self.proxies = Proxies(ninja_key,
                                backoff=backoff)
         self.logstats_interval = logstats_interval
+        self.renew_interval = renew_interval
         self.reanimate_interval = 5
         self.stop_if_no_proxies = stop_if_no_proxies
         self.max_proxies_to_try = max_proxies_to_try
+        self.crawler = crawler
         self.stats = crawler.stats
 
         self.log_task = None
@@ -81,17 +83,13 @@ class RotatingProxyMiddleware(object):
     @classmethod
     def from_crawler(cls, crawler):
         s = crawler.settings
-        proxy_path = s.get('ROTATING_PROXY_LIST_PATH', None)
-        if proxy_path is not None:
-            with codecs.open(proxy_path, 'r', encoding='utf8') as f:
-                proxy_list = [line.strip() for line in f if line.strip()]
-        else:
-            proxy_list = s.getlist('ROTATING_PROXY_LIST')
-        if not proxy_list:
+        ninja_key = s.get('ROTATING_NINJA_KEY', None)
+        if ninja_key is None:
             raise NotConfigured()
         mw = cls(
-            proxy_list=proxy_list,
+            ninja_key=ninja_key,
             logstats_interval=s.getfloat('ROTATING_PROXY_LOGSTATS_INTERVAL', 30),
+            renew_interval=s.getfloat('ROTATING_NINJA_RENEW_INTERVAL', 1200),
             stop_if_no_proxies=s.getbool('ROTATING_PROXY_CLOSE_SPIDER', False),
             max_proxies_to_try=s.getint('ROTATING_PROXY_PAGE_RETRY_TIMES', 5),
             backoff_base=s.getfloat('ROTATING_PROXY_BACKOFF_BASE', 300),
@@ -105,6 +103,10 @@ class RotatingProxyMiddleware(object):
         return mw
 
     def engine_started(self):
+        if self.renew_interval:
+            self.renew_proxies = task.LoopingCall(self.renew_proxies)
+            self.renew_proxies.start(self.renew_interval, now=True)
+
         if self.logstats_interval:
             self.log_task = task.LoopingCall(self.log_stats)
             self.log_task.start(self.logstats_interval, now=True)
@@ -200,16 +202,11 @@ class RotatingProxyMiddleware(object):
                          extra={'spider': spider})
 
     def log_stats(self):
-        logger.info('%s' % self.proxies)
+        logger.info('Queued(progress:%s, queued:%s) %s' % (len(self.crawler.engine.slot.inprogress), self.crawler.engine.slot.scheduler.__len__(), self.proxies))
 
-    @classmethod
-    def cleanup_proxy_list(cls, proxy_list):
-        lines = [line.strip() for line in proxy_list]
-        return list({
-            add_http_if_no_scheme(url)
-            for url in lines
-            if url and not url.startswith('#')
-        })
+    def renew_proxies(self):
+        self.proxies.load_ninja(self.crawler.settings.get('ROTATING_NINJA_KEY', None))
+        logger.info('Reloaded Scrapy.Ninja live proxy list %s' % self.proxies)
 
 
 class BanDetectionMiddleware(object):
