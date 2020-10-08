@@ -86,8 +86,8 @@ class RotatingProxyMiddleware(object):
     def from_crawler(cls, crawler):
         s = crawler.settings
         ninja_key = s.get('ROTATING_NINJA_KEY', None)
-        proxy_list = s.get('ROTATING_PROXY_LIST', None)
-        if ninja_key is None and proxy_list is None:
+        proxy_list = s.getlist('ROTATING_PROXY_LIST', [])
+        if ninja_key is None and len(proxy_list) == 0:
             raise NotConfigured()
         mw = cls(
             ninja_key=ninja_key,
