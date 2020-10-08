@@ -65,12 +65,11 @@ class RotatingProxyMiddleware(object):
     * ``ROTATING_PROXY_BACKOFF_CAP`` - backoff time cap, in seconds.
       Default is 3600 (i.e. 60 min).
     """
-    def __init__(self, ninja_key, logstats_interval, renew_interval, stop_if_no_proxies,
+    def __init__(self, ninja_key, proxy_list, logstats_interval, renew_interval, stop_if_no_proxies,
                  max_proxies_to_try, backoff_base, backoff_cap, crawler):
 
         backoff = partial(exp_backoff_full_jitter, base=backoff_base, cap=backoff_cap)
-        self.proxies = Proxies(ninja_key,
-                               backoff=backoff)
+        self.proxies = Proxies(ninja_key, proxy_list, backoff=backoff)
         self.logstats_interval = logstats_interval
         self.renew_interval = renew_interval
         self.reanimate_interval = 5
