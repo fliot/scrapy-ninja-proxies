@@ -37,21 +37,28 @@ class Proxies(object):
     'reanimated'). This timeout increases exponentially after each
     unsuccessful attempt to use a proxy.
     """
-    def __init__(self, ninja_key, backoff=None):
-        self.load_ninja(ninja_key, backoff=backoff)
+    def __init__(self, ninja_key, proxy_list, backoff=None):
+        self.load_ninja(ninja_key, proxy_list, backoff=backoff)
 
-    def load_ninja(self, ninja_key, backoff=None):
-        r = requests.get(url='https://scrapy.ninja/get_proxy.php?lic=%s' % ninja_key)
-        proxy_list = r.json()['proxies']
+    def load_ninja(self, ninja_key, proxy_list, backoff=None):
+        proxyList = []
+        if not(ninja_key is None):
+            r = requests.get(url='https://scrapy.ninja/get_proxy.php?lic=%s' % ninja_key)
+            for i in r.json()['proxies']:
+                proxyList.append(i)
 
-        lines = [line.strip() for line in proxy_list]
-        proxy_list = list({
+        if not(proxy_list is None):
+            for i in proxy_list:
+                proxyList.append(i)
+
+        lines = [line.strip() for line in proxyList]
+        proxyList = list({
             add_http_if_no_scheme(url)
             for url in lines
             if url and not url.startswith('#')
         })
 
-        self.proxies = {url: ProxyState() for url in proxy_list}
+        self.proxies = {url: ProxyState() for url in proxyList}
         self.proxies_by_hostport = {
             extract_proxy_hostport(proxy): proxy
             for proxy in self.proxies

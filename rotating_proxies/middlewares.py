@@ -48,6 +48,8 @@ class RotatingProxyMiddleware(object):
     * ``ROTATING_NINJA_KEY`` - scrapy.ninja subscription key;
     * ``ROTATING_NINJA_RENEW_INTERVAL`` - renew proxy list in seconds, 
       1200 by default (20 minutes);
+    * ``ROTATING_PROXY_LIST`` - additionnal proxy list (if ROTATING_NINJA_KEY
+      is None, it will be the only available proxies)
     * ``ROTATING_PROXY_LOGSTATS_INTERVAL`` - stats logging interval in seconds,
       30 by default;
     * ``ROTATING_PROXY_CLOSE_SPIDER`` - When True, spider is stopped if
@@ -84,10 +86,12 @@ class RotatingProxyMiddleware(object):
     def from_crawler(cls, crawler):
         s = crawler.settings
         ninja_key = s.get('ROTATING_NINJA_KEY', None)
-        if ninja_key is None:
+        proxy_list = s.get('ROTATING_PROXY_LIST', None)
+        if ninja_key is None and proxy_list is None:
             raise NotConfigured()
         mw = cls(
             ninja_key=ninja_key,
+            proxy_list=proxy_list,
             logstats_interval=s.getfloat('ROTATING_PROXY_LOGSTATS_INTERVAL', 30),
             renew_interval=s.getfloat('ROTATING_NINJA_RENEW_INTERVAL', 1200),
             stop_if_no_proxies=s.getbool('ROTATING_PROXY_CLOSE_SPIDER', False),
@@ -202,10 +206,10 @@ class RotatingProxyMiddleware(object):
                          extra={'spider': spider})
 
     def log_stats(self):
-        logger.info('Queued(progress:%s, queued:%s) %s' % (len(self.crawler.engine.slot.inprogress), self.crawler.engine.slot.scheduler.__len__(), self.proxies))
+        logger.info('Queued(progress: %s, queued: %s) %s' % (len(self.crawler.engine.slot.inprogress), self.crawler.engine.slot.scheduler.__len__(), self.proxies))
 
     def renew_proxies(self):
-        self.proxies.load_ninja(self.crawler.settings.get('ROTATING_NINJA_KEY', None))
+        self.proxies.load_ninja(self.crawler.settings.get('ROTATING_NINJA_KEY', None), self.crawler.settings.get('ROTATING_PROXY_LIST', None))
         logger.info('Reloaded Scrapy.Ninja live proxy list %s' % self.proxies)
 
 
