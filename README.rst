@@ -10,7 +10,7 @@ scrapy-ninja-proxies
    :alt: Build Status
 
 
-This package provides a Scrapy_ middleware to use rotating proxies, automatically provided within scrapy.ninja services subscription.
+This package provides a Scrapy_ middleware to use rotating proxies, automatically provided within [scrapy.ninja](https://scrapy.ninja/) services subscription.
 
 .. _Scrapy: https://scrapy.org/
 
