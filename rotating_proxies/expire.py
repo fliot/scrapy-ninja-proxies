@@ -45,11 +45,11 @@ class Proxies(object):
         if not(ninja_key is None):
             r = requests.get(url='https://scrapy.ninja/get_proxy.php?lic=%s' % ninja_key)
             for i in r.json()['proxies']:
-                proxyList.append(i)
+                proxyList.append("http://%s/" % i)
 
         if not(proxy_list is None):
             for i in proxy_list:
-                proxyList.append(i)
+                proxyList.append("http://%s/" % i)
 
         lines = [line.strip() for line in proxyList]
         proxyList = list({
