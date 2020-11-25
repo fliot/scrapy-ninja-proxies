@@ -31,6 +31,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     install_requires=[
         'attrs > 16.0.0',
+        'requests',
         'six',
         'typing',
     ],
